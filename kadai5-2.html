@@ -1,20 +1,26 @@
+<!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="utf-8">
     <title>演習課題5-2：外部APIの呼び出しテスト</title>
 </head>
 <body>
-    <h1 id="msg">何かのAPI</h1>
+    <h1 id="msg">世界の時間API</h1>
     <form name="apiform"><p>
-        何かのフォーム：<input type="text" name="form_data">
+        タイムゾーンを入力（Asia/Tokyo）：<input type="text" name="form_data">
         <button type="button" id="btn1" onclick="some_api(this.form)">実行</button>
     </p></form>
-    
+
     <div id="result"></div>
+
     <script>
         async function some_api(myForm) {
-            // ここにコードを書く
-            document.getElementById("result").innerHTML += myForm.form_data.value+"<br />";
+            const zone = myForm.form_data.value.trim();
+            const apiUrl = `https://worldtimeapi.org/api/timezone/${encodeURIComponent(zone)}`;
+            const response = await fetch(apiUrl);
+            const data = await response.json();
+            const datetime = data.datetime;
+            document.getElementById("result").innerHTML += `【${zone}】の現在時刻は：${datetime}<br />`;
             document.apiform.reset();
         }
     </script>
